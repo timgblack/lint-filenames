@@ -14,6 +14,14 @@ export async function validateFilenames(
   let totalFilesAnalyzed = 0;
 
   try {
+    try {
+      const dotdir = await opendir('./clients');
+      const entries = [];
+      for await (const dirent of dotdir) entries.push(dirent);
+      console.log(entries);
+    } catch {
+      // Left empty
+    }
     const dir = await opendir(path);
 
     console.log('Verification starting...');
@@ -32,6 +40,7 @@ export async function validateFilenames(
     console.log('Verification finished.');
     console.log(`ℹ️  Files analyzed: \t${totalFilesAnalyzed}`);
   } catch (error) {
+    console.error(error);
     throw new Error('Execution failed, see log above. ❌');
   }
 

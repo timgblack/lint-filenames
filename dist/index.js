@@ -8,7 +8,11 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -97,7 +101,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.validateFilenames = void 0;
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 function validateFilenames(path, pattern) {
-    var e_1, _a;
+    var e_1, _a, e_2, _b;
     return __awaiter(this, void 0, void 0, function* () {
         console.log(`ℹ️  Path:    \t\t'${path}'`);
         console.log(`ℹ️  Pattern: \t\t${pattern}`);
@@ -105,6 +109,27 @@ function validateFilenames(path, pattern) {
         const failedFiles = [];
         let totalFilesAnalyzed = 0;
         try {
+            try {
+                const dotdir = yield opendir('./clients');
+                const entries = [];
+                try {
+                    for (var dotdir_1 = __asyncValues(dotdir), dotdir_1_1; dotdir_1_1 = yield dotdir_1.next(), !dotdir_1_1.done;) {
+                        const dirent = dotdir_1_1.value;
+                        entries.push(dirent);
+                    }
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (dotdir_1_1 && !dotdir_1_1.done && (_a = dotdir_1.return)) yield _a.call(dotdir_1);
+                    }
+                    finally { if (e_1) throw e_1.error; }
+                }
+                console.log(entries);
+            }
+            catch (_c) {
+                // Left empty
+            }
             const dir = yield opendir(path);
             console.log('Verification starting...');
             try {
@@ -123,17 +148,18 @@ function validateFilenames(path, pattern) {
                     }
                 }
             }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
             finally {
                 try {
-                    if (dir_1_1 && !dir_1_1.done && (_a = dir_1.return)) yield _a.call(dir_1);
+                    if (dir_1_1 && !dir_1_1.done && (_b = dir_1.return)) yield _b.call(dir_1);
                 }
-                finally { if (e_1) throw e_1.error; }
+                finally { if (e_2) throw e_2.error; }
             }
             console.log('Verification finished.');
             console.log(`ℹ️  Files analyzed: \t${totalFilesAnalyzed}`);
         }
         catch (error) {
+            console.error(error);
             throw new Error('Execution failed, see log above. ❌');
         }
         if (failedFiles.length) {
